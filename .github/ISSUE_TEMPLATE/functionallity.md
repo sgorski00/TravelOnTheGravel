@@ -1,3 +1,11 @@
+---
+name: Funkcjonalność
+about: Nowe zadanie / funkcjonalność do zrobienia
+title: ""
+labels: []
+assignees: []
+---
+
 ## Opis
 Co trzeba zrobić, w 1–3 zdaniach.
 
