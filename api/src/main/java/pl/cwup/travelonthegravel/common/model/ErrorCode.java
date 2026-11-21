@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ErrorCode {
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST),
+    INVALID_RESET_TOKEN(HttpStatus.BAD_REQUEST),
     MALFORMED_REQUEST(HttpStatus.BAD_REQUEST),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED),
     INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED),

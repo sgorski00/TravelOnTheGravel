@@ -1,4 +1,4 @@
-package pl.cwup.travelonthegravel.config;
+package pl.cwup.travelonthegravel.email.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

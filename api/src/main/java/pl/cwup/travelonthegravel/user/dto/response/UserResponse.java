@@ -1,4 +1,4 @@
-package pl.cwup.travelonthegravel.user.dto;
+package pl.cwup.travelonthegravel.user.dto.response;
 
 import java.time.Instant;
 import pl.cwup.travelonthegravel.user.model.User;

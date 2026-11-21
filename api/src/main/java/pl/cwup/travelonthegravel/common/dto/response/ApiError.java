@@ -1,4 +1,4 @@
-package pl.cwup.travelonthegravel.common.dto;
+package pl.cwup.travelonthegravel.common.dto.response;
 
 import java.time.Instant;
 import java.util.List;

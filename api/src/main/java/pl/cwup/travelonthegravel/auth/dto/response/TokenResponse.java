@@ -1,4 +1,4 @@
-package pl.cwup.travelonthegravel.auth.dto;
+package pl.cwup.travelonthegravel.auth.dto.response;
 
 public record TokenResponse(String accessToken, String refreshToken, String tokenType, long expiresIn) {
 

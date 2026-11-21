@@ -23,8 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.cwup.travelonthegravel.TestcontainersConfiguration;
+import pl.cwup.travelonthegravel.auth.config.JwtProperties;
 import pl.cwup.travelonthegravel.auth.repository.RefreshTokenRepository;
-import pl.cwup.travelonthegravel.config.JwtProperties;
 import pl.cwup.travelonthegravel.user.repository.UserRepository;
 
 @Import(TestcontainersConfiguration.class)

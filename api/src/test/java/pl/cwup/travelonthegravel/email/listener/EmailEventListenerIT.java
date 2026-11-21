@@ -62,6 +62,7 @@ final class EmailEventListenerIT {
             assertThat(JsonPath.<String>read(message, "$.HTML")).contains(expectedLink);
             assertThat(JsonPath.<String>read(message, "$.Text"))
                     .contains("Otrzymaliśmy prośbę o ustawienie nowego hasła")
+                    .contains("Link jest ważny przez 60 min.")
                     .doesNotContain("??");
             assertThat(JsonPath.<String>read(message, "$.HTML")).doesNotContain("??");
         });

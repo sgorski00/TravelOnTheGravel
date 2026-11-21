@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.Context;
-import pl.cwup.travelonthegravel.config.EmailProperties;
+import pl.cwup.travelonthegravel.auth.config.PasswordResetProperties;
+import pl.cwup.travelonthegravel.email.config.EmailProperties;
 
 @Slf4j
 @Service
@@ -24,11 +25,13 @@ public class EmailService {
     private final ITemplateEngine templateEngine;
     private final EmailProperties emailProperties;
     private final MessageSource messageSource;
+    private final PasswordResetProperties passwordResetProperties;
 
     public void sendPasswordResetEmail(String to, String token) {
         final var locale = Locale.getDefault();
         final var context = new Context(locale);
         context.setVariable("resetUrl", resetUrl(token));
+        context.setVariable("expiryMinutes", passwordResetProperties.tokenTtl().toMinutes());
 
         try {
             final var message = mailSender.createMimeMessage();
