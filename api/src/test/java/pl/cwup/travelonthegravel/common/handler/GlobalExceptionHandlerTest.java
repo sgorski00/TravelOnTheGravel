@@ -103,6 +103,13 @@ final class GlobalExceptionHandlerTest {
     }
 
     @Test
+    void invalidPathParameterReturns400() throws Exception {
+        mockMvc.perform(get("/test/errors/number/abc"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("MALFORMED_REQUEST"));
+    }
+
+    @Test
     void wrongHttpMethodReturns405() throws Exception {
         mockMvc.perform(get("/test/errors/validation"))
                 .andExpect(status().isMethodNotAllowed())
