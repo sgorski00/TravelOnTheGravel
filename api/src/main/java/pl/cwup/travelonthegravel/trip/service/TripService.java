@@ -56,7 +56,7 @@ public class TripService {
         tripRepository.delete(findOwnTrip(userId, tripId));
     }
 
-    private Trip findOwnTrip(Long userId, Long tripId) {
+    public Trip findOwnTrip(Long userId, Long tripId) {
         return tripRepository
                 .findByIdAndUserId(tripId, userId)
                 .orElseThrow(() -> new NotFoundException("Nie znaleziono podróży"));
