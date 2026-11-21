@@ -1,6 +1,7 @@
 package pl.cwup.travelonthegravel.common.handler;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -33,6 +34,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiError> handleNotReadable(HttpMessageNotReadableException ex) {
         return response(ApiError.of(ErrorCode.MALFORMED_REQUEST, "Niepoprawny format żądania"));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiError> handleDataIntegrity(DataIntegrityViolationException ex) {
+        return response(ApiError.of(ErrorCode.CONFLICT, "Dane kolidują z istniejącymi danymi"));
     }
 
     @ExceptionHandler(AuthenticationException.class)
