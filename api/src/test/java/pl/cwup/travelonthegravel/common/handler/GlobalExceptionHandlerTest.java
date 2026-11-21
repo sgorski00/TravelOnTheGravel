@@ -13,16 +13,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import pl.cwup.travelonthegravel.config.JwtConfig;
+import pl.cwup.travelonthegravel.config.JwtProperties;
 import pl.cwup.travelonthegravel.config.SecurityConfig;
 
 @WebMvcTest(ErrorTestController.class)
-@Import({SecurityConfig.class, GlobalExceptionHandler.class})
+@Import({SecurityConfig.class, JwtConfig.class, GlobalExceptionHandler.class})
+@EnableConfigurationProperties(JwtProperties.class)
 @WithMockUser
 final class GlobalExceptionHandlerTest {
 
@@ -95,6 +99,22 @@ final class GlobalExceptionHandlerTest {
                         .content("{to nie jest json"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("MALFORMED_REQUEST"));
+    }
+
+    @Test
+    void wrongHttpMethodReturns405() throws Exception {
+        mockMvc.perform(get("/test/errors/validation"))
+                .andExpect(status().isMethodNotAllowed())
+                .andExpect(jsonPath("$.code").value("METHOD_NOT_ALLOWED"));
+    }
+
+    @Test
+    void unsupportedContentTypeReturns415() throws Exception {
+        mockMvc.perform(post("/test/errors/validation")
+                        .contentType(MediaType.TEXT_PLAIN)
+                        .content("tekst"))
+                .andExpect(status().isUnsupportedMediaType())
+                .andExpect(jsonPath("$.code").value("UNSUPPORTED_MEDIA_TYPE"));
     }
 
     @Test

@@ -39,6 +39,7 @@ Alternatywnie, z własną bazą PostgreSQL:
 SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/travelonthegravel \
 SPRING_DATASOURCE_USERNAME=postgres \
 SPRING_DATASOURCE_PASSWORD=postgres \
+JWT_SECRET=change-me-to-your-own-random-secret-at-least-32-chars \
 ./mvnw spring-boot:run
 ```
 
