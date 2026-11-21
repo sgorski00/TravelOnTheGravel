@@ -45,6 +45,7 @@ SPRING_DATASOURCE_PASSWORD=postgres \
 Po starcie aplikacja jest dostępna pod `http://localhost:8080`:
 
 - Swagger UI: `http://localhost:8080/swagger-ui.html`
+- Specyfikacja OpenAPI: `http://localhost:8080/v3/api-docs`
 - Health check: `http://localhost:8080/actuator/health`
 
 Migracje bazy danych (Liquibase) znajdują się w `src/main/resources/db/changelog/`
