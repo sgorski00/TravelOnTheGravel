@@ -11,6 +11,8 @@ cp .env.example .env
 docker compose up --build
 ```
 
+Najczęstsze komendy są w `Makefile` (wpisz `make`, żeby zobaczyć listę).
+
 ## Konwencje
 
 **Typy:** `feat`, `fix`, `chore`, `docs`, `test`
