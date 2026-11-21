@@ -11,6 +11,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import pl.cwup.travelonthegravel.common.dto.response.ApiError;
 import pl.cwup.travelonthegravel.common.exception.ApiException;
@@ -29,6 +30,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException ex) {
         final var fieldErrors = ex.getBindingResult().getFieldErrors().stream()
                 .map(error -> new ApiError.FieldError(error.getField(), error.getDefaultMessage()))
+                .toList();
+        return response(ApiError.of(ErrorCode.VALIDATION_ERROR, "Niepoprawne dane w żądaniu", fieldErrors));
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ApiError> handleParameterValidation(HandlerMethodValidationException ex) {
+        final var fieldErrors = ex.getParameterValidationResults().stream()
+                .flatMap(result -> result.getResolvableErrors().stream()
+                        .map(error -> new ApiError.FieldError(
+                                result.getMethodParameter().getParameterName(), error.getDefaultMessage())))
                 .toList();
         return response(ApiError.of(ErrorCode.VALIDATION_ERROR, "Niepoprawne dane w żądaniu", fieldErrors));
     }
