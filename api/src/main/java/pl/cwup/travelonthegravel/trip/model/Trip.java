@@ -25,6 +25,7 @@ import pl.cwup.travelonthegravel.user.model.User;
 public class Trip {
 
     public static final int NAME_MAX_LENGTH = 255;
+    public static final int DESCRIPTION_MAX_LENGTH = 2000;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
