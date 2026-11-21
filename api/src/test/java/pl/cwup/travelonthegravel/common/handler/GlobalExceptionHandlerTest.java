@@ -23,9 +23,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import pl.cwup.travelonthegravel.auth.config.JwtConfig;
 import pl.cwup.travelonthegravel.auth.config.JwtProperties;
 import pl.cwup.travelonthegravel.common.config.SecurityConfig;
+import pl.cwup.travelonthegravel.common.security.JwtToUserConverter;
 
 @WebMvcTest(ErrorTestController.class)
-@Import({SecurityConfig.class, JwtConfig.class, GlobalExceptionHandler.class})
+@Import({SecurityConfig.class, JwtConfig.class, JwtToUserConverter.class, GlobalExceptionHandler.class})
 @EnableConfigurationProperties(JwtProperties.class)
 @WithMockUser
 final class GlobalExceptionHandlerTest {
@@ -97,6 +98,13 @@ final class GlobalExceptionHandlerTest {
         mockMvc.perform(post("/test/errors/validation")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{to nie jest json"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("MALFORMED_REQUEST"));
+    }
+
+    @Test
+    void invalidPathParameterReturns400() throws Exception {
+        mockMvc.perform(get("/test/errors/number/abc"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("MALFORMED_REQUEST"));
     }

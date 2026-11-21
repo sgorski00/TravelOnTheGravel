@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +45,9 @@ final class ErrorTestController {
     void unexpected() {
         throw new IllegalStateException("Szczegóły techniczne, których nie wolno pokazać");
     }
+
+    @GetMapping("/number/{id}")
+    void number(@PathVariable Long id) {}
 
     @PostMapping("/validation")
     void validation(@Valid @RequestBody TestRequest request) {}

@@ -6,4 +6,8 @@ public interface PasswordConfirmation {
     String password();
 
     String passwordConfirmation();
+
+    default String passwordConfirmationField() {
+        return "passwordConfirmation";
+    }
 }

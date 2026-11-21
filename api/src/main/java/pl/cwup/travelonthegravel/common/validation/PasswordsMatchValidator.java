@@ -13,7 +13,7 @@ public class PasswordsMatchValidator implements ConstraintValidator<PasswordsMat
         }
         context.disableDefaultConstraintViolation();
         context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
-                .addPropertyNode("passwordConfirmation")
+                .addPropertyNode(request.passwordConfirmationField())
                 .addConstraintViolation();
         return false;
     }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import pl.cwup.travelonthegravel.common.dto.response.ApiError;
 import pl.cwup.travelonthegravel.common.exception.ApiException;
@@ -47,6 +48,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiError> handleNotReadable(HttpMessageNotReadableException ex) {
         return response(ApiError.of(ErrorCode.MALFORMED_REQUEST, "Niepoprawny format żądania"));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiError> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        return response(ApiError.of(ErrorCode.MALFORMED_REQUEST, "Niepoprawna wartość parametru: " + ex.getName()));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
