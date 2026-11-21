@@ -10,7 +10,6 @@ import static pl.cwup.travelonthegravel.TestData.user;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,6 @@ import pl.cwup.travelonthegravel.auth.config.PasswordResetProperties;
 import pl.cwup.travelonthegravel.auth.dto.request.PasswordResetConfirmRequest;
 import pl.cwup.travelonthegravel.auth.event.PasswordResetRequestedEvent;
 import pl.cwup.travelonthegravel.auth.model.PasswordResetToken;
-import pl.cwup.travelonthegravel.auth.model.RefreshToken;
 import pl.cwup.travelonthegravel.auth.repository.PasswordResetTokenRepository;
 import pl.cwup.travelonthegravel.auth.repository.RefreshTokenRepository;
 import pl.cwup.travelonthegravel.common.exception.BadRequestException;
@@ -104,16 +102,14 @@ final class PasswordResetServiceTest {
     void confirmResetChangesPasswordMarksTokenUsedAndRevokesSessions() {
         final var resetToken =
                 new PasswordResetToken(user, "token-hash", Instant.now().plusSeconds(60));
-        final var session = new RefreshToken(user, "refresh-hash", Instant.now().plusSeconds(60));
         mockResetToken(resetToken);
         when(passwordEncoder.encode("noweHaslo1")).thenReturn("new-hash");
-        when(refreshTokenRepository.findAllByUserAndRevokedFalse(user)).thenReturn(List.of(session));
 
         passwordResetService.confirmReset(confirmRequest());
 
         assertThat(user.getPasswordHash()).isEqualTo("new-hash");
         assertThat(resetToken.isUsed()).isTrue();
-        assertThat(session.isRevoked()).isTrue();
+        verify(refreshTokenRepository).revokeAllByUser(user);
     }
 
     @Test
@@ -147,7 +143,7 @@ final class PasswordResetServiceTest {
                 .extracting("code")
                 .isEqualTo(ErrorCode.INVALID_RESET_TOKEN);
         assertThat(user.getPasswordHash()).isEqualTo("hash");
-        verify(refreshTokenRepository, never()).findAllByUserAndRevokedFalse(any());
+        verify(refreshTokenRepository, never()).revokeAllByUser(any());
     }
 
     private void mockResetToken(PasswordResetToken token) {
