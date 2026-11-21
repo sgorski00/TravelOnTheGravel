@@ -23,9 +23,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import pl.cwup.travelonthegravel.auth.config.JwtConfig;
 import pl.cwup.travelonthegravel.auth.config.JwtProperties;
 import pl.cwup.travelonthegravel.common.config.SecurityConfig;
+import pl.cwup.travelonthegravel.common.security.JwtToUserConverter;
 
 @WebMvcTest(ErrorTestController.class)
-@Import({SecurityConfig.class, JwtConfig.class, GlobalExceptionHandler.class})
+@Import({SecurityConfig.class, JwtConfig.class, JwtToUserConverter.class, GlobalExceptionHandler.class})
 @EnableConfigurationProperties(JwtProperties.class)
 @WithMockUser
 final class GlobalExceptionHandlerTest {

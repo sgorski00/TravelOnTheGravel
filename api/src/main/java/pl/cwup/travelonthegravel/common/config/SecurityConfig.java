@@ -3,7 +3,6 @@ package pl.cwup.travelonthegravel.common.config;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -13,6 +12,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import pl.cwup.travelonthegravel.common.security.JwtToUserConverter;
 
 @Configuration
 public class SecurityConfig {
@@ -23,7 +23,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http, @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver)
+            HttpSecurity http,
+            @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver,
+            JwtToUserConverter jwtToUserConverter)
             throws Exception {
         // 401/403 errors
         final AuthenticationEntryPoint entryPoint =
@@ -37,8 +39,8 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest()
                         .authenticated())
-                .oauth2ResourceServer(
-                        oauth2 -> oauth2.jwt(Customizer.withDefaults()).authenticationEntryPoint(entryPoint))
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtToUserConverter))
+                        .authenticationEntryPoint(entryPoint))
                 .exceptionHandling(exceptions ->
                         exceptions.authenticationEntryPoint(entryPoint).accessDeniedHandler(accessDeniedHandler));
         return http.build();

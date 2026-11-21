@@ -54,6 +54,6 @@ public class PasswordResetService {
         resetToken.setUsed(true);
 
         // Po zmianie hasła wylogowujemy wszystkie wcześniejsze sesje.
-        refreshTokenRepository.findAllByUserAndRevokedFalse(user).forEach(token -> token.setRevoked(true));
+        refreshTokenRepository.revokeAllByUser(user);
     }
 }
