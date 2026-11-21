@@ -1,4 +1,4 @@
-package pl.cwup.travelonthegravel.config;
+package pl.cwup.travelonthegravel.auth.config;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import java.nio.charset.StandardCharsets;

@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import pl.cwup.travelonthegravel.auth.dto.LoginRequest;
-import pl.cwup.travelonthegravel.auth.dto.RefreshTokenRequest;
-import pl.cwup.travelonthegravel.auth.dto.RegisterRequest;
-import pl.cwup.travelonthegravel.auth.dto.TokenResponse;
+import pl.cwup.travelonthegravel.auth.dto.request.LoginRequest;
+import pl.cwup.travelonthegravel.auth.dto.request.RefreshTokenRequest;
+import pl.cwup.travelonthegravel.auth.dto.request.RegisterRequest;
+import pl.cwup.travelonthegravel.auth.dto.response.TokenResponse;
 import pl.cwup.travelonthegravel.auth.service.AuthService;
-import pl.cwup.travelonthegravel.user.dto.UserResponse;
+import pl.cwup.travelonthegravel.user.dto.response.UserResponse;
 
 @Tag(name = "Auth", description = "Rejestracja, logowanie i tokeny")
 @SecurityRequirements

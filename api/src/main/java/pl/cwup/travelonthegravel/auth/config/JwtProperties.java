@@ -1,4 +1,4 @@
-package pl.cwup.travelonthegravel.config;
+package pl.cwup.travelonthegravel.auth.config;
 
 import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;

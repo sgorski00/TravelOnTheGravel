@@ -20,9 +20,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.cwup.travelonthegravel.config.JwtConfig;
-import pl.cwup.travelonthegravel.config.JwtProperties;
-import pl.cwup.travelonthegravel.config.SecurityConfig;
+import pl.cwup.travelonthegravel.auth.config.JwtConfig;
+import pl.cwup.travelonthegravel.auth.config.JwtProperties;
+import pl.cwup.travelonthegravel.common.config.SecurityConfig;
 
 @WebMvcTest(ErrorTestController.class)
 @Import({SecurityConfig.class, JwtConfig.class, GlobalExceptionHandler.class})

@@ -1,4 +1,4 @@
-package pl.cwup.travelonthegravel.config;
+package pl.cwup.travelonthegravel.common.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;

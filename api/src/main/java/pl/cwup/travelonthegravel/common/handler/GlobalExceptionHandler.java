@@ -12,7 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-import pl.cwup.travelonthegravel.common.dto.ApiError;
+import pl.cwup.travelonthegravel.common.dto.response.ApiError;
 import pl.cwup.travelonthegravel.common.exception.ApiException;
 import pl.cwup.travelonthegravel.common.model.ErrorCode;
 

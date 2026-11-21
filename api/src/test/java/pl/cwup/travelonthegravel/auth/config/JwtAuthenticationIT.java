@@ -1,4 +1,4 @@
-package pl.cwup.travelonthegravel.config;
+package pl.cwup.travelonthegravel.auth.config;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
