@@ -15,6 +15,11 @@ services:
       timeout: 5s
       retries: 10
 
+  mailpit:
+    image: axllent/mailpit:v1.34
+    ports:
+      - "${MAILPIT_UI_PORT:-8025}:8025"
+
   api:
     build: ./api
     env_file: .env
@@ -23,6 +28,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      mailpit:
+        condition: service_started
 
 volumes:
   db-data:
