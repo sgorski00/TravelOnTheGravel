@@ -2,7 +2,14 @@
 
 ## Dokumentacja
 
-- [Uruchomienie API](api/README.md) — wymagania, uruchomienie lokalne, build i testy
+- [Uruchomienie API](api/README.md) — wymagania, uruchomienie w kontenerach, uruchomienie lokalne, build i testy
+
+Szybki start (Docker):
+
+```bash
+cp .env.example .env
+docker compose up --build
+```
 
 ## Konwencje
 

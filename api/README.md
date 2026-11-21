@@ -10,6 +10,20 @@ Backend aplikacji TravelOnTheGravel wykonany z użyciem Spring Boot 4.
 
 Wszystkie polecenia poniżej wykonujemy z katalogu `api/`.
 
+## Uruchomienie w kontenerach (Docker Compose)
+
+Aplikacja i baza PostgreSQL uruchamiają się jednym poleceniem. Polecenia wykonujemy
+z **głównego katalogu repozytorium** (tam jest `docker-compose.yml`):
+
+```bash
+cp .env.example .env
+docker compose up --build
+```
+
+- zatrzymanie: `docker compose down`
+- zatrzymanie i usunięcie danych bazy: `docker compose down -v`
+- przebudowanie aplikacji po zmianach w kodzie: `docker compose up --build`
+
 ## Uruchomienie lokalne
 
 Najprostszy sposób — aplikacja sama postawi kontener PostgreSQL przez Testcontainers
