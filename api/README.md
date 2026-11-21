@@ -20,6 +20,8 @@ cp .env.example .env
 docker compose up --build
 ```
 
+Maile wysyłane lokalnie (np. reset hasła) trafiają do **Mailpit**: `http://localhost:8025`.
+
 - zatrzymanie: `docker compose down`
 - zatrzymanie i usunięcie danych bazy: `docker compose down -v`
 - przebudowanie aplikacji po zmianach w kodzie: `docker compose up --build`
