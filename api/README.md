@@ -71,3 +71,21 @@ Testy jednostkowe + integracyjne (`*IT.java` — failsafe, wymagają Dockera):
 ```bash
 ./mvnw verify
 ```
+
+## Linter
+
+Używamy **Spotless** z formatem **Palantir Java Format** — formatuje kod (wcięcia, klamry, spacje, długość linii, importy).
+
+Autopoprawki (z katalogu głównego repozytorium):
+
+```bash
+make lint
+```
+
+Samo sprawdzenie, bez zmieniania kodu (tak samo jak w CI):
+
+```bash
+make lint-check
+```
+
+Bez `make`, z katalogu `api/`: `./mvnw spotless:apply` (poprawki) albo `./mvnw spotless:check` (sprawdzenie).
