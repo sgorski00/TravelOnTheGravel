@@ -1,4 +1,4 @@
-package pl.cwup.travelonthegravel;
+package pl.cwup.travelonthegravel.config;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -10,11 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
+import pl.cwup.travelonthegravel.TestcontainersConfiguration;
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-class SecurityConfigIT {
+final class SecurityConfigIT {
 
     @Autowired
     private MockMvc mockMvc;
