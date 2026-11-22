@@ -13,6 +13,7 @@ import static pl.cwup.travelonthegravel.TestData.user;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -44,6 +45,9 @@ final class PointServiceTest {
 
     @Mock
     private GeocodingService geocodingService;
+
+    @Mock
+    private SegmentService segmentService;
 
     @InjectMocks
     private PointService pointService;
@@ -78,6 +82,7 @@ final class PointServiceTest {
 
         assertThat(response.position()).isEqualTo(2);
         assertThat(response.countryCode()).isEqualTo("PL");
+        verify(segmentService).syncWithPoints(trip, Set.of());
     }
 
     @Test
@@ -102,17 +107,19 @@ final class PointServiceTest {
         assertThat(response.name()).isEqualTo("Stolica");
         assertThat(response.countryCode()).isEqualTo("PL");
         verify(geocodingService, never()).countryCode(anyDouble(), anyDouble());
+        verify(segmentService, never()).syncWithPoints(any(), any());
     }
 
     @Test
     void updatePointWithNewCoordinatesSetsNewCountry() {
-        mockOwnPoint(5L, point(trip, "Warszawa", 0));
+        final var point = mockOwnPoint(5L, withId(point(trip, "Warszawa", 0), 5L));
         when(geocodingService.countryCode(52.52, 13.40)).thenReturn(Optional.of("DE"));
 
         final var response = pointService.updatePoint(USER_ID, TRIP_ID, 5L, new PointRequest("Berlin", 52.52, 13.40));
 
         assertThat(response.latitude()).isEqualTo(52.52);
         assertThat(response.countryCode()).isEqualTo("DE");
+        verify(segmentService).syncWithPoints(point.getTrip(), Set.of(5L));
     }
 
     @Test
@@ -136,6 +143,7 @@ final class PointServiceTest {
         verify(pointRepository).delete(deleted);
         assertThat(first.getPosition()).isZero();
         assertThat(last.getPosition()).isEqualTo(1);
+        verify(segmentService).syncWithPoints(trip, Set.of());
     }
 
     @Test
@@ -152,6 +160,7 @@ final class PointServiceTest {
         assertThat(gdansk.getPosition()).isZero();
         assertThat(warsaw.getPosition()).isEqualTo(1);
         assertThat(krakow.getPosition()).isEqualTo(2);
+        verify(segmentService).syncWithPoints(trip, Set.of());
     }
 
     @Test
@@ -182,6 +191,7 @@ final class PointServiceTest {
                 .isEqualTo(ErrorCode.INVALID_POINT_ORDER);
         assertThat(warsaw.getPosition()).isZero();
         assertThat(gdansk.getPosition()).isEqualTo(2);
+        verify(segmentService, never()).syncWithPoints(any(), any());
     }
 
     private void mockOwnTrip() {

@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import pl.cwup.travelonthegravel.routing.model.GeoJsonLineString;
 
 @Entity
 @Table(name = "segments")
@@ -48,10 +49,16 @@ public class Segment {
     @Column(name = "distance_meters")
     private Long distanceMeters;
 
-    /** Trasa odcinka jako GeoJSON LineString. */
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
-    private String geometry;
+    private GeoJsonLineString geometry;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "geometry_simplified", columnDefinition = "jsonb")
+    private GeoJsonLineString geometrySimplified;
+
+    @Column(name = "is_fallback", nullable = false)
+    private boolean isFallback = false;
 
     public Segment(Trip trip, Point fromPoint, Point toPoint, TransportType transportType) {
         this.trip = trip;
@@ -60,8 +67,15 @@ public class Segment {
         this.transportType = transportType;
     }
 
-    public void setRoute(Long distanceMeters, String geometry) {
+    public void setRoute(
+            long distanceMeters, GeoJsonLineString geometry, GeoJsonLineString geometrySimplified, boolean isFallback) {
         this.distanceMeters = distanceMeters;
         this.geometry = geometry;
+        this.geometrySimplified = geometrySimplified;
+        this.isFallback = isFallback;
+    }
+
+    public boolean connects(Point from, Point to) {
+        return fromPoint.getId().equals(from.getId()) && toPoint.getId().equals(to.getId());
     }
 }

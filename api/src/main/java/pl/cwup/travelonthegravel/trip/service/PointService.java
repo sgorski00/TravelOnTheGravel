@@ -2,6 +2,7 @@ package pl.cwup.travelonthegravel.trip.service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class PointService {
     private final TripService tripService;
     private final PointRepository pointRepository;
     private final GeocodingService geocodingService;
+    private final SegmentService segmentService;
 
     @Transactional(readOnly = true)
     public List<PointResponse> getPoints(Long userId, Long tripId) {
@@ -47,7 +49,9 @@ public class PointService {
                 request.longitude(),
                 countryCode(request.latitude(), request.longitude()),
                 position);
-        return PointResponse.from(pointRepository.save(point));
+        final var saved = pointRepository.save(point);
+        segmentService.syncWithPoints(trip, Set.of());
+        return PointResponse.from(saved);
     }
 
     @Transactional
@@ -57,20 +61,23 @@ public class PointService {
         if (!point.isAt(request.latitude(), request.longitude())) {
             point.setLocation(
                     request.latitude(), request.longitude(), countryCode(request.latitude(), request.longitude()));
+            segmentService.syncWithPoints(point.getTrip(), Set.of(point.getId()));
         }
         return PointResponse.from(point);
     }
 
     @Transactional
     public void deletePoint(Long userId, Long tripId, Long pointId) {
-        pointRepository.delete(findOwnPoint(userId, tripId, pointId));
+        final var point = findOwnPoint(userId, tripId, pointId);
+        pointRepository.delete(point);
         pointRepository.flush();
         renumber(pointRepository.findAllByTripIdOrderByPosition(tripId));
+        segmentService.syncWithPoints(point.getTrip(), Set.of());
     }
 
     @Transactional
     public List<PointResponse> reorderPoints(Long userId, Long tripId, PointOrderRequest request) {
-        tripService.findOwnTrip(userId, tripId);
+        final var trip = tripService.findOwnTrip(userId, tripId);
         final var points = pointRepository.findAllByTripIdOrderByPosition(tripId).stream()
                 .collect(Collectors.toMap(Point::getId, Function.identity()));
 
@@ -82,6 +89,7 @@ public class PointService {
 
         final var ordered = ids.stream().map(points::get).toList();
         renumber(ordered);
+        segmentService.syncWithPoints(trip, Set.of());
         return ordered.stream().map(PointResponse::from).toList();
     }
 

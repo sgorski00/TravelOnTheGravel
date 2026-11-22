@@ -28,4 +28,19 @@ final class CoordinatesTest {
             Locale.setDefault(defaultLocale);
         }
     }
+
+    @Test
+    void distanceWarsawKrakowInStraightLineIsAbout252Km() {
+        final var warsaw = new Coordinates(52.2297, 21.0122);
+        final var krakow = new Coordinates(50.0647, 19.945);
+
+        assertThat(warsaw.distanceMetersTo(krakow)).isBetween(251_000L, 253_000L);
+        assertThat(krakow.distanceMetersTo(warsaw)).isEqualTo(warsaw.distanceMetersTo(krakow));
+    }
+
+    @Test
+    void distanceToSamePointIsZero() {
+        assertThat(new Coordinates(52.2297, 21.0122).distanceMetersTo(new Coordinates(52.2297, 21.0122)))
+                .isZero();
+    }
 }
