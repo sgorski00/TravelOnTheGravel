@@ -61,4 +61,8 @@ public class Point {
         this.longitude = longitude;
         this.countryCode = countryCode;
     }
+
+    public boolean isAt(double latitude, double longitude) {
+        return this.latitude == latitude && this.longitude == longitude;
+    }
 }

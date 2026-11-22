@@ -32,4 +32,12 @@ final class PointTest {
         assertThat(point.getLongitude()).isEqualTo(13.40);
         assertThat(point.getCountryCode()).isEqualTo("DE");
     }
+
+    @Test
+    void isAtComparesCoordinates() {
+        final var point = new Point(trip, "Punkt", 52.23, 21.01, "PL", 0);
+
+        assertThat(point.isAt(52.23, 21.01)).isTrue();
+        assertThat(point.isAt(52.23, 21.02)).isFalse();
+    }
 }
