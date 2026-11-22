@@ -44,4 +44,16 @@ final class TripTest {
         assertThat(trip.isOwnedBy(1L)).isTrue();
         assertThat(trip.isOwnedBy(2L)).isFalse();
     }
+
+    @Test
+    void startYearIsYearOfStartDate() {
+        final var trip = new Trip(
+                user("jan@example.com", "jan"),
+                "Sylwester",
+                LocalDate.of(2025, 12, 30),
+                LocalDate.of(2026, 1, 2),
+                null);
+
+        assertThat(trip.startYear()).isEqualTo(2025);
+    }
 }
