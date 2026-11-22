@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/changes/003-user-role.sql
   - include:
       file: db/changelog/changes/004-user-blocked.sql
+  - include:
+      file: db/changelog/changes/005-dev-seed.sql

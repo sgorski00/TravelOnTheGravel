@@ -26,6 +26,17 @@ Maile wysyłane lokalnie (np. reset hasła) trafiają do **Mailpit**: `http://lo
 - zatrzymanie i usunięcie danych bazy: `docker compose down -v`
 - przebudowanie aplikacji po zmianach w kodzie: `docker compose up --build`
 
+## Przykładowe dane (profil dev)
+
+Z profilem `dev` (`SPRING_PROFILES_ACTIVE=dev`, domyślnie w `.env.example`) Liquibase ładuje przykładowe konta,
+podróże, punkty i odcinki. Bez tego profilu (produkcja, testy) dane się nie ładują.
+
+Hasło wszystkich kont testowych: `haslo1234`
+Dostępne konta: `anna@example.com`, `bartek@example.com`, `celina@example.com` (profil prywatny), `dawid@example.com` (konto zablokowane)
+
+Konto administratora tworzy się ze zmiennych `ADMIN_EMAIL` i `ADMIN_PASSWORD`, nie z tych danych.
+Żeby wyczyścić bazę i załadować dane od nowa: `docker compose down -v`, potem `docker compose up --build`.
+
 ## Uruchomienie lokalne
 
 Najprostszy sposób — aplikacja sama postawi kontener PostgreSQL przez Testcontainers
