@@ -21,8 +21,8 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import pl.cwup.travelonthegravel.TestcontainersConfiguration;
 import pl.cwup.travelonthegravel.common.exception.ExternalServiceException;
-import pl.cwup.travelonthegravel.routing.model.Coordinates;
-import pl.cwup.travelonthegravel.routing.model.GeoJsonType;
+import pl.cwup.travelonthegravel.common.model.Coordinates;
+import pl.cwup.travelonthegravel.common.model.geojson.GeoJsonType;
 import pl.cwup.travelonthegravel.routing.model.RouteDetail;
 import pl.cwup.travelonthegravel.routing.service.RoutingService;
 

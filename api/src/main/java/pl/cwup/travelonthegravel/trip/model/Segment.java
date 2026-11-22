@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import pl.cwup.travelonthegravel.routing.model.GeoJsonLineString;
+import pl.cwup.travelonthegravel.common.model.geojson.GeoJsonLineString;
 
 @Entity
 @Table(name = "segments")

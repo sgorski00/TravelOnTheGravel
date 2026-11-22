@@ -8,7 +8,7 @@ import static pl.cwup.travelonthegravel.TestData.user;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
-import pl.cwup.travelonthegravel.routing.model.GeoJsonLineString;
+import pl.cwup.travelonthegravel.common.model.geojson.GeoJsonLineString;
 
 final class SegmentTest {
 

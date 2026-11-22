@@ -10,4 +10,6 @@ public interface SegmentRepository extends JpaRepository<Segment, Long> {
     List<Segment> findAllByTripIdOrderByFromPointPosition(Long tripId);
 
     Optional<Segment> findByIdAndTripId(Long id, Long tripId);
+
+    List<Segment> findAllByTripUserIdOrderByTripIdAscFromPointPositionAsc(Long userId);
 }

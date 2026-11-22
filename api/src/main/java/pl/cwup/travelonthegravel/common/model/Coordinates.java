@@ -1,4 +1,4 @@
-package pl.cwup.travelonthegravel.routing.model;
+package pl.cwup.travelonthegravel.common.model;
 
 import java.util.Locale;
 

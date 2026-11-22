@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import pl.cwup.travelonthegravel.routing.model.GeoJsonLineString;
+import pl.cwup.travelonthegravel.common.model.geojson.GeoJsonLineString;
 import pl.cwup.travelonthegravel.routing.model.Route;
 
 final class OsrmRouteResponseTest {

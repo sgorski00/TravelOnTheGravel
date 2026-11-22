@@ -13,7 +13,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.cwup.travelonthegravel.routing.model.Coordinates;
+import pl.cwup.travelonthegravel.common.model.Coordinates;
 
 @Entity
 @Table(name = "points")
