@@ -69,4 +69,8 @@ public class Trip {
     public boolean isOwnedBy(Long userId) {
         return user.getId().equals(userId);
     }
+
+    public int startYear() {
+        return startDate.getYear();
+    }
 }

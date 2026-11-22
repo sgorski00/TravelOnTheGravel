@@ -6,6 +6,11 @@ public record Coordinates(double latitude, double longitude) {
 
     private static final double EARTH_RADIUS_METERS = 6_371_000;
 
+    public Coordinates round(int decimals) {
+        final var scale = Math.pow(10, decimals);
+        return new Coordinates(Math.round(latitude * scale) / scale, Math.round(longitude * scale) / scale);
+    }
+
     public String toLonLat() {
         return String.format(Locale.ROOT, "%.6f,%.6f", longitude, latitude);
     }

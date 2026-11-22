@@ -43,4 +43,10 @@ final class CoordinatesTest {
         assertThat(new Coordinates(52.2297, 21.0122).distanceMetersTo(new Coordinates(52.2297, 21.0122)))
                 .isZero();
     }
+
+    @Test
+    void roundKeepsGivenNumberOfDecimals() {
+        assertThat(new Coordinates(52.229712, 21.012249).round(3)).isEqualTo(new Coordinates(52.230, 21.012));
+        assertThat(new Coordinates(52.22951, 21.01249).round(3)).isEqualTo(new Coordinates(52.230, 21.012));
+    }
 }
