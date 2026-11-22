@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 import pl.cwup.travelonthegravel.auth.config.JwtConfig;
 import pl.cwup.travelonthegravel.auth.config.JwtProperties;
+import pl.cwup.travelonthegravel.common.model.Role;
 
 final class TokenServiceTest {
 
@@ -44,5 +45,16 @@ final class TokenServiceTest {
 
         assertThat(tokenService.hash(token)).isEqualTo(tokenService.hash(token));
         assertThat(tokenService.hash(token)).isNotEqualTo(token).hasSize(64);
+    }
+
+    @Test
+    void accessTokenContainsRole() {
+        final var admin = user("admin@example.com", "admin");
+        ReflectionTestUtils.setField(admin, "id", 1L);
+        admin.setRole(Role.ADMIN);
+
+        final var jwt = jwtConfig.jwtDecoder(JWT_PROPERTIES).decode(tokenService.createAccessToken(admin));
+
+        assertThat(jwt.getClaimAsString("role")).isEqualTo("ADMIN");
     }
 }

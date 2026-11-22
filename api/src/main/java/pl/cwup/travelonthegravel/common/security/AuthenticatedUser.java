@@ -1,3 +1,5 @@
 package pl.cwup.travelonthegravel.common.security;
 
-public record AuthenticatedUser(Long id, String username) {}
+import pl.cwup.travelonthegravel.common.model.Role;
+
+public record AuthenticatedUser(Long id, String username, Role role) {}

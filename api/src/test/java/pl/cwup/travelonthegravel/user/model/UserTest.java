@@ -3,6 +3,7 @@ package pl.cwup.travelonthegravel.user.model;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
+import pl.cwup.travelonthegravel.common.model.Role;
 
 final class UserTest {
 
@@ -14,5 +15,6 @@ final class UserTest {
         assertThat(user.getUsername()).isEqualTo("jan");
         assertThat(user.getPasswordHash()).isEqualTo("hash");
         assertThat(user.isPublic()).isFalse();
+        assertThat(user.getRole()).isEqualTo(Role.USER);
     }
 }
