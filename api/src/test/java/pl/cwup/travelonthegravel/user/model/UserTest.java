@@ -16,5 +16,6 @@ final class UserTest {
         assertThat(user.getPasswordHash()).isEqualTo("hash");
         assertThat(user.isPublic()).isFalse();
         assertThat(user.getRole()).isEqualTo(Role.USER);
+        assertThat(user.isBlocked()).isFalse();
     }
 }

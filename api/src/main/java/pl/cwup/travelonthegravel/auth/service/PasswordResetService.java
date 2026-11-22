@@ -13,6 +13,7 @@ import pl.cwup.travelonthegravel.auth.model.PasswordResetToken;
 import pl.cwup.travelonthegravel.auth.repository.PasswordResetTokenRepository;
 import pl.cwup.travelonthegravel.auth.repository.RefreshTokenRepository;
 import pl.cwup.travelonthegravel.common.exception.BadRequestException;
+import pl.cwup.travelonthegravel.common.exception.ForbiddenException;
 import pl.cwup.travelonthegravel.common.model.ErrorCode;
 import pl.cwup.travelonthegravel.user.repository.UserRepository;
 
@@ -30,15 +31,19 @@ public class PasswordResetService {
 
     @Transactional
     public void requestReset(String email) {
-        userRepository.findByEmailIgnoreCase(email).ifPresent(user -> {
-            passwordResetTokenRepository.deleteAllByUser(user);
+        userRepository
+                .findByEmailIgnoreCase(email)
+                .filter(user -> !user.isBlocked())
+                .ifPresent(user -> {
+                    passwordResetTokenRepository.deleteAllByUser(user);
 
-            final var token = tokenService.generateRandomToken();
-            final var expiresAt = Instant.now().plus(passwordResetProperties.tokenTtl());
-            passwordResetTokenRepository.save(new PasswordResetToken(user, tokenService.hash(token), expiresAt));
+                    final var token = tokenService.generateRandomToken();
+                    final var expiresAt = Instant.now().plus(passwordResetProperties.tokenTtl());
+                    passwordResetTokenRepository.save(
+                            new PasswordResetToken(user, tokenService.hash(token), expiresAt));
 
-            eventPublisher.publishEvent(new PasswordResetRequestedEvent(user.getEmail(), token));
-        });
+                    eventPublisher.publishEvent(new PasswordResetRequestedEvent(user.getEmail(), token));
+                });
     }
 
     @Transactional
@@ -50,6 +55,9 @@ public class PasswordResetService {
                         ErrorCode.INVALID_RESET_TOKEN, "Link do resetu hasła jest nieprawidłowy lub wygasł"));
 
         final var user = resetToken.getUser();
+        if (user.isBlocked()) {
+            throw new ForbiddenException(ErrorCode.ACCOUNT_BLOCKED, "Konto jest zablokowane");
+        }
         user.setPasswordHash(passwordEncoder.encode(request.password()));
         resetToken.setUsed(true);
 

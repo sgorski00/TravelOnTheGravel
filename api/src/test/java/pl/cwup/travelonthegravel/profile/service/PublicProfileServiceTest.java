@@ -49,7 +49,7 @@ final class PublicProfileServiceTest {
     void searchAsksForPublicUsersSortedByUsername() {
         final var pageable =
                 PageRequest.of(0, 20, Sort.by(Sort.Order.asc("username").ignoreCase()));
-        when(userRepository.findByIsPublicTrueAndUsernameContainingIgnoreCase("jan", pageable))
+        when(userRepository.findByIsPublicTrueAndBlockedFalseAndUsernameContainingIgnoreCase("jan", pageable))
                 .thenReturn(new PageImpl<>(List.of(publicUser("jan", 1L)), pageable, 1));
 
         final var result = publicProfileService.search(" jan ", PageRequest.of(0, 20, Sort.by("email")));
@@ -112,5 +112,14 @@ final class PublicProfileServiceTest {
         user.setPublic(true);
         ReflectionTestUtils.setField(user, "id", id);
         return user;
+    }
+
+    @Test
+    void blockedUserIsNotFound() {
+        final var blocked = publicUser("jan", 1L);
+        blocked.setBlocked(true);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(blocked));
+
+        assertThatThrownBy(() -> publicProfileService.getProfile(1L)).isInstanceOf(NotFoundException.class);
     }
 }
