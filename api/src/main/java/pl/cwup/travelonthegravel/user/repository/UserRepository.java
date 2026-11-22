@@ -1,6 +1,8 @@
 package pl.cwup.travelonthegravel.user.repository;
 
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import pl.cwup.travelonthegravel.user.model.User;
 
@@ -13,4 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmailIgnoreCase(String email);
 
     boolean existsByUsernameIgnoreCase(String username);
+
+    Page<User> findByIsPublicTrueAndUsernameContainingIgnoreCase(String usernameFragment, Pageable pageable);
 }
