@@ -12,6 +12,7 @@ import pl.cwup.travelonthegravel.auth.dto.response.TokenResponse;
 import pl.cwup.travelonthegravel.auth.model.RefreshToken;
 import pl.cwup.travelonthegravel.auth.repository.RefreshTokenRepository;
 import pl.cwup.travelonthegravel.common.exception.ConflictException;
+import pl.cwup.travelonthegravel.common.exception.ForbiddenException;
 import pl.cwup.travelonthegravel.common.exception.UnauthorizedException;
 import pl.cwup.travelonthegravel.common.model.ErrorCode;
 import pl.cwup.travelonthegravel.user.dto.response.UserResponse;
@@ -48,6 +49,7 @@ public class AuthService {
                 .filter(found -> passwordEncoder.matches(request.password(), found.getPasswordHash()))
                 .orElseThrow(() ->
                         new UnauthorizedException(ErrorCode.INVALID_CREDENTIALS, "Nieprawidłowy e-mail lub hasło"));
+        ensureNotBlocked(user);
 
         final var refreshToken = tokenService.generateRandomToken();
         final var expiresAt = Instant.now().plus(jwtProperties.refreshTokenTtl());
@@ -63,6 +65,7 @@ public class AuthService {
                 .filter(RefreshToken::isValid)
                 .orElseThrow(() -> new UnauthorizedException(
                         ErrorCode.INVALID_REFRESH_TOKEN, "Refresh token jest nieprawidłowy lub wygasł"));
+        ensureNotBlocked(token.getUser());
 
         return tokens(token.getUser(), refreshToken);
     }
@@ -72,6 +75,12 @@ public class AuthService {
         refreshTokenRepository
                 .findByTokenHash(tokenService.hash(refreshToken))
                 .ifPresent(token -> token.setRevoked(true));
+    }
+
+    private static void ensureNotBlocked(User user) {
+        if (user.isBlocked()) {
+            throw new ForbiddenException(ErrorCode.ACCOUNT_BLOCKED, "Konto jest zablokowane");
+        }
     }
 
     private TokenResponse tokens(User user, String refreshToken) {

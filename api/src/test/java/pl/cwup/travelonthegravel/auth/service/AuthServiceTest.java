@@ -24,6 +24,7 @@ import pl.cwup.travelonthegravel.auth.dto.request.RegisterRequest;
 import pl.cwup.travelonthegravel.auth.model.RefreshToken;
 import pl.cwup.travelonthegravel.auth.repository.RefreshTokenRepository;
 import pl.cwup.travelonthegravel.common.exception.ConflictException;
+import pl.cwup.travelonthegravel.common.exception.ForbiddenException;
 import pl.cwup.travelonthegravel.common.exception.UnauthorizedException;
 import pl.cwup.travelonthegravel.common.model.ErrorCode;
 import pl.cwup.travelonthegravel.user.model.User;
@@ -210,5 +211,44 @@ final class AuthServiceTest {
 
     private static RegisterRequest registerRequest() {
         return new RegisterRequest("jan@example.com", "jan", "tajnehaslo", "tajnehaslo");
+    }
+
+    @Test
+    void loginToBlockedAccountWithCorrectPasswordThrowsAccountBlocked() {
+        final var user = user("jan@example.com", "jan");
+        user.setBlocked(true);
+        when(userRepository.findByEmailIgnoreCase("jan@example.com")).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("tajnehaslo", "hash")).thenReturn(true);
+
+        assertThatThrownBy(() -> authService.login(new LoginRequest("jan@example.com", "tajnehaslo")))
+                .isInstanceOf(ForbiddenException.class)
+                .extracting("code")
+                .isEqualTo(ErrorCode.ACCOUNT_BLOCKED);
+        verify(refreshTokenRepository, never()).save(any());
+    }
+
+    @Test
+    void loginToBlockedAccountWithWrongPasswordStillThrowsInvalidCredentials() {
+        final var user = user("jan@example.com", "jan");
+        user.setBlocked(true);
+        when(userRepository.findByEmailIgnoreCase("jan@example.com")).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("zlehaslo", "hash")).thenReturn(false);
+
+        assertThatThrownBy(() -> authService.login(new LoginRequest("jan@example.com", "zlehaslo")))
+                .isInstanceOf(UnauthorizedException.class)
+                .extracting("code")
+                .isEqualTo(ErrorCode.INVALID_CREDENTIALS);
+    }
+
+    @Test
+    void refreshForBlockedAccountThrowsAccountBlocked() {
+        final var user = user("jan@example.com", "jan");
+        user.setBlocked(true);
+        mockRefreshToken(new RefreshToken(user, "refresh-hash", Instant.now().plusSeconds(60)));
+
+        assertThatThrownBy(() -> authService.refresh("refresh"))
+                .isInstanceOf(ForbiddenException.class)
+                .extracting("code")
+                .isEqualTo(ErrorCode.ACCOUNT_BLOCKED);
     }
 }

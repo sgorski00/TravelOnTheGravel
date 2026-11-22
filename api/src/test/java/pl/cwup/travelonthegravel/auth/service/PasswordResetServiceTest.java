@@ -26,6 +26,7 @@ import pl.cwup.travelonthegravel.auth.model.PasswordResetToken;
 import pl.cwup.travelonthegravel.auth.repository.PasswordResetTokenRepository;
 import pl.cwup.travelonthegravel.auth.repository.RefreshTokenRepository;
 import pl.cwup.travelonthegravel.common.exception.BadRequestException;
+import pl.cwup.travelonthegravel.common.exception.ForbiddenException;
 import pl.cwup.travelonthegravel.common.model.ErrorCode;
 import pl.cwup.travelonthegravel.user.model.User;
 import pl.cwup.travelonthegravel.user.repository.UserRepository;
@@ -153,5 +154,28 @@ final class PasswordResetServiceTest {
 
     private static PasswordResetConfirmRequest confirmRequest() {
         return new PasswordResetConfirmRequest("token", "noweHaslo1", "noweHaslo1");
+    }
+
+    @Test
+    void requestResetForBlockedAccountDoesNothing() {
+        user.setBlocked(true);
+        when(userRepository.findByEmailIgnoreCase("jan@example.com")).thenReturn(Optional.of(user));
+
+        passwordResetService.requestReset("jan@example.com");
+
+        verify(passwordResetTokenRepository, never()).save(any());
+        verify(eventPublisher, never()).publishEvent(any());
+    }
+
+    @Test
+    void confirmResetForBlockedAccountThrowsAccountBlocked() {
+        user.setBlocked(true);
+        mockResetToken(new PasswordResetToken(user, "token-hash", Instant.now().plusSeconds(60)));
+
+        assertThatThrownBy(() -> passwordResetService.confirmReset(confirmRequest()))
+                .isInstanceOf(ForbiddenException.class)
+                .extracting("code")
+                .isEqualTo(ErrorCode.ACCOUNT_BLOCKED);
+        assertThat(user.getPasswordHash()).isEqualTo("hash");
     }
 }

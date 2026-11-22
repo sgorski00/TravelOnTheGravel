@@ -35,7 +35,7 @@ public class PublicProfileService {
                 pageable.getPageSize(),
                 Sort.by(Sort.Order.asc("username").ignoreCase()));
         return userRepository
-                .findByIsPublicTrueAndUsernameContainingIgnoreCase(query.trim(), sorted)
+                .findByIsPublicTrueAndBlockedFalseAndUsernameContainingIgnoreCase(query.trim(), sorted)
                 .map(PublicUserResponse::from);
     }
 
@@ -58,8 +58,10 @@ public class PublicProfileService {
     }
 
     private User findPublicUser(Long userId) {
-        final var user =
-                userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Nie znaleziono użytkownika"));
+        final var user = userRepository
+                .findById(userId)
+                .filter(found -> !found.isBlocked())
+                .orElseThrow(() -> new NotFoundException("Nie znaleziono użytkownika"));
         if (!user.isPublic()) {
             throw new ForbiddenException(ErrorCode.PROFILE_PRIVATE, "Profil użytkownika jest prywatny");
         }
