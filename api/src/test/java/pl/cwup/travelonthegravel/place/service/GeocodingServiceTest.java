@@ -7,13 +7,13 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.time.Duration;
+import io.github.resilience4j.ratelimiter.RateLimiter;
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.ResourceAccessException;
 import pl.cwup.travelonthegravel.common.exception.ExternalServiceException;
 import pl.cwup.travelonthegravel.place.client.NominatimApi;
-import pl.cwup.travelonthegravel.place.config.NominatimProperties;
 import pl.cwup.travelonthegravel.place.dto.nominatim.NominatimAddress;
 import pl.cwup.travelonthegravel.place.dto.nominatim.NominatimPlace;
 import pl.cwup.travelonthegravel.place.dto.response.PlaceResponse;
@@ -28,8 +28,7 @@ final class GeocodingServiceTest {
             new NominatimAddress("pl"));
 
     private final NominatimApi nominatimApi = mock(NominatimApi.class);
-    private final GeocodingService geocodingService =
-            new GeocodingService(nominatimApi, new NominatimProperties(Duration.ZERO));
+    private final GeocodingService geocodingService = new GeocodingService(nominatimApi);
 
     @Test
     void searchMapsPlacesWithUppercaseCountryCode() {
@@ -77,5 +76,15 @@ final class GeocodingServiceTest {
         when(nominatimApi.search(anyString(), anyInt())).thenThrow(new ResourceAccessException("timeout"));
 
         assertThatThrownBy(() -> geocodingService.search("Kraków")).isInstanceOf(ExternalServiceException.class);
+    }
+
+    @Test
+    void rateLimitFallbacksThrowExternalServiceException() {
+        final var ex = RequestNotPermitted.createRequestNotPermitted(RateLimiter.ofDefaults("nominatim"));
+
+        assertThatThrownBy(() -> geocodingService.searchRateLimited("Kraków", ex))
+                .isInstanceOf(ExternalServiceException.class);
+        assertThatThrownBy(() -> geocodingService.countryCodeRateLimited(50.06, 19.94, ex))
+                .isInstanceOf(ExternalServiceException.class);
     }
 }

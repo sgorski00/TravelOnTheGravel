@@ -1,5 +1,6 @@
 package pl.cwup.travelonthegravel.place.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
@@ -10,6 +11,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
+import java.time.Duration;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,6 +43,9 @@ final class PlaceControllerIT {
 
     @Autowired
     private CacheManager cacheManager;
+
+    @Autowired
+    private RateLimiterRegistry rateLimiterRegistry;
 
     @MockitoBean
     private NominatimApi nominatimApi;
@@ -87,6 +93,38 @@ final class PlaceControllerIT {
         search(" kraków ").andExpect(status().isOk());
 
         verify(nominatimApi, times(1)).search(anyString(), anyInt());
+    }
+
+    @Test
+    void nominatimIsCalledAtMostOncePerSecond() throws Exception {
+        when(nominatimApi.search(anyString(), anyInt())).thenReturn(List.of(KRAKOW));
+
+        // Limit liczy się w sekundowych oknach, więc 3 różne zapytania muszą zająć co najmniej ~1 s.
+        final var start = System.nanoTime();
+        search("Kraków").andExpect(status().isOk());
+        search("Gdańsk").andExpect(status().isOk());
+        search("Poznań").andExpect(status().isOk());
+
+        assertThat(Duration.ofNanos(System.nanoTime() - start)).isGreaterThan(Duration.ofMillis(900));
+    }
+
+    @Test
+    void cachedQueryDoesNotWaitForRateLimit() throws Exception {
+        when(nominatimApi.search(anyString(), anyInt())).thenReturn(List.of(KRAKOW));
+        search("Wrocław").andExpect(status().isOk());
+
+        final var start = System.nanoTime();
+        search("wrocław").andExpect(status().isOk());
+
+        assertThat(Duration.ofNanos(System.nanoTime() - start)).isLessThan(Duration.ofMillis(500));
+    }
+
+    @Test
+    void osrmHasSameRateLimitAsNominatim() {
+        final var config = rateLimiterRegistry.rateLimiter("osrm").getRateLimiterConfig();
+
+        assertThat(config.getLimitForPeriod()).isEqualTo(1);
+        assertThat(config.getLimitRefreshPeriod()).isEqualTo(Duration.ofSeconds(1));
     }
 
     @Test
