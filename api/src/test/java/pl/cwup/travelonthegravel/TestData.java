@@ -1,6 +1,8 @@
 package pl.cwup.travelonthegravel;
 
 import java.time.LocalDate;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import pl.cwup.travelonthegravel.trip.model.Point;
 import pl.cwup.travelonthegravel.trip.model.Segment;
 import pl.cwup.travelonthegravel.trip.model.TransportType;
@@ -8,9 +10,8 @@ import pl.cwup.travelonthegravel.trip.model.Trip;
 import pl.cwup.travelonthegravel.user.model.User;
 
 /** Metody pomocnicze do tworzenia obiektów w testach. */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TestData {
-
-    private TestData() {}
 
     public static User user(String email, String username) {
         return new User(email, username, "hash");

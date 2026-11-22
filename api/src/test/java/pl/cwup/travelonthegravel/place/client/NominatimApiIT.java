@@ -23,9 +23,13 @@ import pl.cwup.travelonthegravel.TestcontainersConfiguration;
 import pl.cwup.travelonthegravel.common.exception.ExternalServiceException;
 import pl.cwup.travelonthegravel.place.service.GeocodingService;
 
-// Sprawdza konfigurację spring.http.serviceclient.nominatim.* na małym serwerze HTTP zamiast prawdziwego Nominatim.
 @Import(TestcontainersConfiguration.class)
-@SpringBootTest
+@SpringBootTest(
+        properties = {
+            "spring.http.serviceclient.nominatim.read-timeout=500ms",
+            "resilience4j.ratelimiter.instances.nominatim.limit-for-period=100",
+            "app.http.user-agent=TestAgent/1.0"
+        })
 final class NominatimApiIT {
 
     private static final HttpServer SERVER;
@@ -50,8 +54,6 @@ final class NominatimApiIT {
         registry.add(
                 "spring.http.serviceclient.nominatim.base-url",
                 () -> "http://localhost:" + SERVER.getAddress().getPort());
-        registry.add("spring.http.serviceclient.nominatim.read-timeout", () -> "500ms");
-        registry.add("app.nominatim.min-interval", () -> "0s");
     }
 
     @Autowired
@@ -87,7 +89,7 @@ final class NominatimApiIT {
         assertThat(lastRequest.getRequestURI().getPath()).isEqualTo("/search");
         assertThat(lastRequest.getRequestURI().getQuery())
                 .contains("q=Kraków", "limit=5", "format=jsonv2", "addressdetails=1");
-        assertThat(lastRequest.getRequestHeaders().getFirst("User-Agent")).startsWith("TravelOnTheGravel");
+        assertThat(lastRequest.getRequestHeaders().getFirst("User-Agent")).isEqualTo("TestAgent/1.0");
     }
 
     @Test
