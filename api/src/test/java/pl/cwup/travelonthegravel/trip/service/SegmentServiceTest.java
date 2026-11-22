@@ -27,7 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import pl.cwup.travelonthegravel.common.exception.ExternalServiceException;
 import pl.cwup.travelonthegravel.common.exception.NotFoundException;
-import pl.cwup.travelonthegravel.routing.model.GeoJsonLineString;
+import pl.cwup.travelonthegravel.common.model.geojson.GeoJsonLineString;
 import pl.cwup.travelonthegravel.routing.model.Route;
 import pl.cwup.travelonthegravel.routing.model.RouteDetail;
 import pl.cwup.travelonthegravel.routing.service.RoutingService;

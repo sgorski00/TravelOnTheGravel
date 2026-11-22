@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import pl.cwup.travelonthegravel.common.exception.ExternalServiceException;
+import pl.cwup.travelonthegravel.common.model.Coordinates;
 import pl.cwup.travelonthegravel.routing.client.OsrmApi;
 import pl.cwup.travelonthegravel.routing.dto.osrm.OsrmRouteResponse;
-import pl.cwup.travelonthegravel.routing.model.Coordinates;
 import pl.cwup.travelonthegravel.routing.model.Route;
 import pl.cwup.travelonthegravel.routing.model.RouteDetail;
 

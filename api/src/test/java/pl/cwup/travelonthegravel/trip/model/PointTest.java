@@ -5,7 +5,7 @@ import static pl.cwup.travelonthegravel.TestData.trip;
 import static pl.cwup.travelonthegravel.TestData.user;
 
 import org.junit.jupiter.api.Test;
-import pl.cwup.travelonthegravel.routing.model.Coordinates;
+import pl.cwup.travelonthegravel.common.model.Coordinates;
 
 final class PointTest {
 

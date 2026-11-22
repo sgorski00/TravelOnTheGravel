@@ -12,4 +12,6 @@ public interface PointRepository extends JpaRepository<Point, Long> {
     Optional<Point> findByIdAndTripId(Long id, Long tripId);
 
     int countByTripId(Long tripId);
+
+    List<Point> findAllByTripUserIdOrderByTripIdAscPositionAsc(Long userId);
 }

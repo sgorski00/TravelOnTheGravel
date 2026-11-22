@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import pl.cwup.travelonthegravel.TestcontainersConfiguration;
-import pl.cwup.travelonthegravel.routing.model.GeoJsonLineString;
+import pl.cwup.travelonthegravel.common.model.geojson.GeoJsonLineString;
 import pl.cwup.travelonthegravel.trip.model.TransportType;
 import pl.cwup.travelonthegravel.user.repository.UserRepository;
 

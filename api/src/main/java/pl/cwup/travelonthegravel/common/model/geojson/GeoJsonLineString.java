@@ -1,9 +1,10 @@
-package pl.cwup.travelonthegravel.routing.model;
+package pl.cwup.travelonthegravel.common.model.geojson;
 
 import java.util.List;
+import pl.cwup.travelonthegravel.common.model.Coordinates;
 
 // Współrzędne w kolejności GeoJSON: [longitude, latitude].
-public record GeoJsonLineString(GeoJsonType type, List<List<Double>> coordinates) {
+public record GeoJsonLineString(GeoJsonType type, List<List<Double>> coordinates) implements GeoJsonGeometry {
 
     public static GeoJsonLineString of(List<List<Double>> coordinates) {
         return new GeoJsonLineString(GeoJsonType.LINE_STRING, coordinates);

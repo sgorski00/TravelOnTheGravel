@@ -1,4 +1,4 @@
-package pl.cwup.travelonthegravel.routing.model;
+package pl.cwup.travelonthegravel.common.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -14,13 +14,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import pl.cwup.travelonthegravel.common.exception.ExternalServiceException;
+import pl.cwup.travelonthegravel.common.model.Coordinates;
+import pl.cwup.travelonthegravel.common.model.geojson.GeoJsonLineString;
 import pl.cwup.travelonthegravel.routing.client.OsrmApi;
 import pl.cwup.travelonthegravel.routing.dto.osrm.OsrmCode;
 import pl.cwup.travelonthegravel.routing.dto.osrm.OsrmGeometry;
 import pl.cwup.travelonthegravel.routing.dto.osrm.OsrmRoute;
 import pl.cwup.travelonthegravel.routing.dto.osrm.OsrmRouteResponse;
-import pl.cwup.travelonthegravel.routing.model.Coordinates;
-import pl.cwup.travelonthegravel.routing.model.GeoJsonLineString;
 import pl.cwup.travelonthegravel.routing.model.Route;
 import pl.cwup.travelonthegravel.routing.model.RouteDetail;
 

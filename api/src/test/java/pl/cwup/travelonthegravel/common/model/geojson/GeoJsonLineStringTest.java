@@ -1,9 +1,10 @@
-package pl.cwup.travelonthegravel.routing.model;
+package pl.cwup.travelonthegravel.common.model.geojson;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import pl.cwup.travelonthegravel.common.model.Coordinates;
 import tools.jackson.databind.json.JsonMapper;
 
 final class GeoJsonLineStringTest {
