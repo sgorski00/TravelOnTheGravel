@@ -1,5 +1,6 @@
 package pl.cwup.travelonthegravel.user.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import pl.cwup.travelonthegravel.TestcontainersConfiguration;
+import pl.cwup.travelonthegravel.common.model.Role;
 import pl.cwup.travelonthegravel.user.model.User;
 import pl.cwup.travelonthegravel.user.repository.UserRepository;
 
@@ -96,6 +98,20 @@ final class UserControllerIT {
                         .content("{\"email\": \"zly-email\", \"username\": \"  \"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"));
+    }
+
+    @Test
+    void roleCannotBeChangedByProfileUpdate() throws Exception {
+        perform(patch(ME_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"role\": \"ADMIN\", \"isPublic\": true}"))
+                .andExpect(status().isOk());
+
+        assertThat(userRepository
+                        .findByEmailIgnoreCase("jan@example.com")
+                        .orElseThrow()
+                        .getRole())
+                .isEqualTo(Role.USER);
     }
 
     @Test

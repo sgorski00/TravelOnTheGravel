@@ -2,6 +2,8 @@ package pl.cwup.travelonthegravel.user.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import pl.cwup.travelonthegravel.common.model.Role;
 
 @Entity
 @Table(name = "users")
@@ -42,6 +45,11 @@ public class User {
     @Setter
     @Column(name = "is_public", nullable = false)
     private boolean isPublic = false;
+
+    @Setter
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Role role = Role.USER;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

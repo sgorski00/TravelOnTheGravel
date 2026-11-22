@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import pl.cwup.travelonthegravel.TestcontainersConfiguration;
 import pl.cwup.travelonthegravel.auth.config.JwtProperties;
 import pl.cwup.travelonthegravel.auth.repository.RefreshTokenRepository;
+import pl.cwup.travelonthegravel.common.model.Role;
 import pl.cwup.travelonthegravel.user.repository.UserRepository;
 
 @Import(TestcontainersConfiguration.class)
@@ -71,6 +72,7 @@ final class AuthControllerIT {
         final var saved =
                 userRepository.findByEmailIgnoreCase("jan@example.com").orElseThrow();
         assertThat(saved.getPasswordHash()).isNotEqualTo("tajnehaslo");
+        assertThat(saved.getRole()).isEqualTo(Role.USER);
         assertThat(passwordEncoder.matches("tajnehaslo", saved.getPasswordHash()))
                 .isTrue();
     }

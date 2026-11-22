@@ -66,6 +66,23 @@ final class JwtAuthenticationIT {
     }
 
     @Test
+    void tokenWithoutRoleReturns401() throws Exception {
+        final var claims = JwtClaimsSet.builder()
+                .subject("1")
+                .issuedAt(Instant.now())
+                .expiresAt(Instant.now().plusSeconds(60))
+                .build();
+        final var token = jwtEncoder
+                .encode(JwtEncoderParameters.from(
+                        JwsHeader.with(MacAlgorithm.HS256).build(), claims))
+                .getTokenValue();
+
+        mockMvc.perform(get(PROTECTED_URL).header(HttpHeaders.AUTHORIZATION, bearer(token)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code").value("UNAUTHORIZED"));
+    }
+
+    @Test
     void tokenWithoutUserIdReturns401() throws Exception {
         final var claims = JwtClaimsSet.builder()
                 .issuedAt(Instant.now())
@@ -84,6 +101,7 @@ final class JwtAuthenticationIT {
     private String token(Instant expiresAt) {
         final var claims = JwtClaimsSet.builder()
                 .subject("1")
+                .claim("role", "USER")
                 .issuedAt(expiresAt.minusSeconds(900))
                 .expiresAt(expiresAt)
                 .build();

@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import pl.cwup.travelonthegravel.auth.config.JwtProperties;
+import pl.cwup.travelonthegravel.common.security.JwtToUserConverter;
 import pl.cwup.travelonthegravel.user.model.User;
 
 @Service
@@ -32,6 +33,7 @@ public class TokenService {
         final var claims = JwtClaimsSet.builder()
                 .subject(user.getId().toString())
                 .claim("username", user.getUsername())
+                .claim(JwtToUserConverter.ROLE_CLAIM, user.getRole().name())
                 .issuedAt(now)
                 .expiresAt(now.plus(jwtProperties.accessTokenTtl()))
                 .build();
