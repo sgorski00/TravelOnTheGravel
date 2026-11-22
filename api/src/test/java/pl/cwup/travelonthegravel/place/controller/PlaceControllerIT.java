@@ -29,6 +29,7 @@ import pl.cwup.travelonthegravel.TestcontainersConfiguration;
 import pl.cwup.travelonthegravel.place.client.NominatimApi;
 import pl.cwup.travelonthegravel.place.dto.nominatim.NominatimAddress;
 import pl.cwup.travelonthegravel.place.dto.nominatim.NominatimPlace;
+import pl.cwup.travelonthegravel.place.service.GeocodingService;
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
@@ -43,6 +44,9 @@ final class PlaceControllerIT {
 
     @Autowired
     private CacheManager cacheManager;
+
+    @Autowired
+    private GeocodingService geocodingService;
 
     @Autowired
     private RateLimiterRegistry rateLimiterRegistry;
@@ -125,6 +129,26 @@ final class PlaceControllerIT {
 
         assertThat(config.getLimitForPeriod()).isEqualTo(1);
         assertThat(config.getLimitRefreshPeriod()).isEqualTo(Duration.ofSeconds(1));
+    }
+
+    @Test
+    void countryCodeForSeaIsEmptyAndNotCached() {
+        when(nominatimApi.reverse(55.2, 17.5)).thenReturn(new NominatimPlace(null, null, null, null, null));
+
+        assertThat(geocodingService.countryCode(55.2, 17.5)).isEmpty();
+        assertThat(geocodingService.countryCode(55.2, 17.5)).isEmpty();
+
+        verify(nominatimApi, times(2)).reverse(55.2, 17.5);
+    }
+
+    @Test
+    void countryCodeIsCached() {
+        when(nominatimApi.reverse(50.06, 19.94)).thenReturn(KRAKOW);
+
+        assertThat(geocodingService.countryCode(50.06, 19.94)).contains("PL");
+        assertThat(geocodingService.countryCode(50.06, 19.94)).contains("PL");
+
+        verify(nominatimApi, times(1)).reverse(50.06, 19.94);
     }
 
     @Test

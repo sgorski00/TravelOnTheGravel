@@ -33,7 +33,7 @@ public class GeocodingService {
                 : places.stream().map(NominatimPlace::toPlaceResponse).toList();
     }
 
-    @Cacheable(cacheNames = "places-country", key = "#latitude + ',' + #longitude", unless = "#result.isEmpty()")
+    @Cacheable(cacheNames = "places-country", key = "#latitude + ',' + #longitude", unless = "#result == null")
     @RateLimiter(name = "nominatim", fallbackMethod = "countryCodeRateLimited")
     public Optional<String> countryCode(double latitude, double longitude) {
         return Optional.ofNullable(call(() -> nominatimApi.reverse(latitude, longitude)))
