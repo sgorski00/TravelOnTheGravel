@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.cwup.travelonthegravel.routing.model.Coordinates;
 
 @Entity
 @Table(name = "points")
@@ -64,5 +65,9 @@ public class Point {
 
     public boolean isAt(double latitude, double longitude) {
         return this.latitude == latitude && this.longitude == longitude;
+    }
+
+    public Coordinates coordinates() {
+        return new Coordinates(latitude, longitude);
     }
 }

@@ -5,6 +5,7 @@ import static pl.cwup.travelonthegravel.TestData.trip;
 import static pl.cwup.travelonthegravel.TestData.user;
 
 import org.junit.jupiter.api.Test;
+import pl.cwup.travelonthegravel.routing.model.Coordinates;
 
 final class PointTest {
 
@@ -39,5 +40,12 @@ final class PointTest {
 
         assertThat(point.isAt(52.23, 21.01)).isTrue();
         assertThat(point.isAt(52.23, 21.02)).isFalse();
+    }
+
+    @Test
+    void coordinatesReturnsLatitudeAndLongitude() {
+        final var point = new Point(trip, "Punkt", 52.23, 21.01, "PL", 0);
+
+        assertThat(point.coordinates()).isEqualTo(new Coordinates(52.23, 21.01));
     }
 }

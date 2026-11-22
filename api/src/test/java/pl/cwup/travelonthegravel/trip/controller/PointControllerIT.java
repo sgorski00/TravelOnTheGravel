@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import pl.cwup.travelonthegravel.TestcontainersConfiguration;
 import pl.cwup.travelonthegravel.place.service.GeocodingService;
+import pl.cwup.travelonthegravel.routing.service.RoutingService;
 import pl.cwup.travelonthegravel.user.model.User;
 import pl.cwup.travelonthegravel.user.repository.UserRepository;
 
@@ -49,6 +50,9 @@ final class PointControllerIT {
 
     @MockitoBean
     private GeocodingService geocodingService;
+
+    @MockitoBean
+    private RoutingService routingService;
 
     private String janToken;
     private String olaToken;
